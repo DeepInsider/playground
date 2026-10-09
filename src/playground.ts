@@ -1352,17 +1352,21 @@ function userHasInteracted() {
   if (state.tutorial != null && state.tutorial !== '') {
     page = `/v/tutorials/${state.tutorial}`;
   }
-  ga('set', 'page', page);
-  ga('send', 'pageview', {'sessionControl': 'start'});
+  // Modified by K. M. (20261009): comment out the following lines
+  //ga('set', 'page', page);
+  //ga('send', 'pageview', {'sessionControl': 'start'});
 }
 
 function simulationStarted() {
+  // Modified by K. M. (20261009): comment out the following lines
+  /*
   ga('send', {
     hitType: 'event',
     eventCategory: 'Starting Simulation',
     eventAction: parametersChanged ? 'changed' : 'unchanged',
     eventLabel: state.tutorial == null ? '' : state.tutorial
   });
+  */
   parametersChanged = false;
 }
 
