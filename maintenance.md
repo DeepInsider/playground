@@ -6,8 +6,9 @@ Use `.nvmrc` with your Node version manager; this repository does not install or
 ## Scope
 
 The first maintenance pass updates development tools and their compatible transitive dependencies.
-D3 3.5.17, Material Design Lite 1.3.0 and seedrandom 2.4.4 remain unchanged.
+D3 3.5.17 and Material Design Lite 1.3.0 remain unchanged.
 The first pass retained TypeScript 2.9.2; the second pass updates it to 5.9.3.
+The third pass updates seedrandom from 2.4.4 to 3.0.5.
 Browserify is declared directly instead of relying on another package to install its CLI.
 JavaScript compilation and compression run sequentially so compilation failures stop the build.
 Native Node watchers replace watchify and also watch HTML and CSS (the previous concat commands only copied once).
@@ -41,6 +42,13 @@ The compiler still emits ES5/CommonJS for Browserify; no application source or l
 This also prevents duplicate implicit D3 type entries whose path casing differs in tsify on Windows. Type checking and casing consistency are not disabled.
 TypeScript 6 deprecates the ES5 target and legacy Node module resolution; TypeScript 7 uses a native compiler distribution with no traditional `main` entry for the current tsify integration. Those migrations are deferred to the separate bundler/output-target review.
 
+## Seedrandom update
+
+Seedrandom 3.0.5 is pinned. Its minified browser script is still included in `docs/lib.js`; the application continues to call `Math.seedrandom(seed)` and use `Math.random()` for simulation.
+Version 3 no longer installs `Math.seedrandom` when loaded through CommonJS `require`, so any future bundler migration must preserve browser-script loading or explicitly adapt the API. See the [upstream usage notes](https://github.com/davidbau/seedrandom#cjs--nodejs-usage).
+Six string seeds (including an empty string and Japanese text), with 1,000 random values each, matched version 2.4.4 exactly in browser-script mode. Fixed-seed learning loss matched the baseline at all 10 checked steps. Type checking, full build, all 30 browser cases and hover checks passed; clean installation and audit retain 4 low development findings and 0 production findings.
+No application source, dataset generation or learning algorithm changes are needed.
+
 ## Remaining work
 
 The initial audit was 35 affected packages (9 critical, 18 high, 7 moderate, 1 low).
@@ -51,4 +59,4 @@ Counts are a 2026-10-10 snapshot, not a permanent guarantee.
 Do not use `npm audit fix --force`: even the compatible automated fix tried resolving an older crypto-browserify with new critical findings during this pass; newer compatible versions were restored and re-audited.
 
 D3 has breaking API changes after v3. MDL is in limited support. Further compiler upgrades and any bundler replacement need a separate migration and browser regression checks.
-Seedrandom can be considered separately, retaining fixed-seed reproducibility and checking how its global API is loaded.
+Keep fixed-seed reproducibility and seedrandom's browser global API in regression checks during any bundler migration.

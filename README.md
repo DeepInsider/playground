@@ -21,6 +21,7 @@ This will start an http server and automatically re-compile the TypeScript,
 HTML and CSS files whenever they change.
 The watchers use Node's built-in file watching. See [dependency maintenance](maintenance.md) for update boundaries and validation.
 TypeScript is pinned to 5.9.3; CommonJS bundling and ES5 output are retained for this maintenance pass.
+Seedrandom is pinned to 3.0.5 and remains loaded as a browser script to preserve seeded simulations.
 
 ## For owners
 
