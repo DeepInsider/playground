@@ -8,19 +8,23 @@ Your feedback is highly appreciated!
 
 ## Development
 
+Use Node.js 24 LTS (24.21.0) and npm 11. The Node version is recorded in `.nvmrc`.
 To run the visualization locally, run:
 
-- `npm i` to install dependencies
-- `npm run build` to compile the app and place it in the `dist/` directory
-- `npm run serve` to serve from the `dist/` directory and open a page on your browser.
+- `npm ci --ignore-scripts` to install the locked dependencies
+- `npm run build` to compile the app and place it in the `docs/` directory
+- `npm run serve` to serve from `docs/` at `http://127.0.0.1:8080` and open your browser.
 
 For a fast edit-refresh cycle when developing run `npm run serve-watch`.
 This will start an http server and automatically re-compile the TypeScript,
 HTML and CSS files whenever they change.
+The watchers use Node's built-in file watching. See [dependency maintenance](maintenance.md) for update boundaries and validation.
 
 ## For owners
 
-To push to production: `git subtree push --prefix dist origin gh-pages`.
+GitHub Pages publishes `docs/` from `master`. Build and verify the generated files,
+then commit them with the source changes. Deploy by updating `master` and checking
+the Pages build and the live site.
 
 This is not an official Google product.
 
