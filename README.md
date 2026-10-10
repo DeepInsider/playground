@@ -12,6 +12,7 @@ Use Node.js 24 LTS (24.21.0) and npm 11. The Node version is recorded in `.nvmrc
 To run the visualization locally, run:
 
 - `npm ci --ignore-scripts` to install the locked dependencies
+- `npm run typecheck` to check TypeScript without writing generated files
 - `npm run build` to compile the app and place it in the `docs/` directory
 - `npm run serve` to serve from `docs/` at `http://127.0.0.1:8080` and open your browser.
 
@@ -19,6 +20,7 @@ For a fast edit-refresh cycle when developing run `npm run serve-watch`.
 This will start an http server and automatically re-compile the TypeScript,
 HTML and CSS files whenever they change.
 The watchers use Node's built-in file watching. See [dependency maintenance](maintenance.md) for update boundaries and validation.
+TypeScript is pinned to 5.9.3; CommonJS bundling and ES5 output are retained for this maintenance pass.
 
 ## For owners
 
