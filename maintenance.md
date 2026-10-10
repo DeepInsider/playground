@@ -49,14 +49,22 @@ Version 3 no longer installs `Math.seedrandom` when loaded through CommonJS `req
 Six string seeds (including an empty string and Japanese text), with 1,000 random values each, matched version 2.4.4 exactly in browser-script mode. Fixed-seed learning loss matched the baseline at all 10 checked steps. Type checking, full build, all 30 browser cases and hover checks passed; clean installation and audit retain 4 low development findings and 0 production findings.
 No application source, dataset generation or learning algorithm changes are needed.
 
+## Bundler replacement
+
+Browserify, tsify and uglify-js are replaced by esbuild 0.28.2 and `scripts/build-js.cjs`. TypeScript still checks the entire project and emits ES5/CommonJS with `--noEmitOnError`; esbuild bundles that JavaScript with `target: es5`. This avoids esbuild's limitation on lowering ES6 syntax to ES5. See the [esbuild ES5 notes](https://esbuild.github.io/content-types/#es5).
+Each build uses a unique ignored `.build/js-*` directory and removes it afterward. Debug builds include inline source maps with TypeScript sources; production builds are minified. Native source watching invokes the same build script, so type failures retain the previous bundle and wait for corrected edits.
+D3 v3's non-strict global initialization cannot run inside the strict bundle. The build resolves D3 imports to `window.d3`, already provided by `lib.js`; HTML must keep loading `lib.js` first. This also removes a duplicate D3 copy from the bundle. Seedrandom and MDL retain their existing script loading.
+The Browserify crypto dependency chain (including elliptic) is removed from the lockfile. Clean installation with `--ignore-scripts` works with esbuild's platform optional package; do not omit optional dependencies.
+Validation on Node 24.21.0: clean installation, standalone type checking, production build, all 30 Chrome browser cases, hover controls and JS/CSS/HTML change watching passed. The fixed-seed loss display matches the prior build at all 10 checked steps. Both syntax and semantic type errors stop compilation; a semantic failure preserves the previous bundle and cleans temporary files. Audit reports 0 development and 0 production findings. ES5 output is retained by the compiler and bundler settings; historical browsers were not directly tested.
+
 ## Remaining work
 
 The initial audit was 35 affected packages (9 critical, 18 high, 7 moderate, 1 low).
-After this pass the audit is 4 low-severity development packages, with no moderate/high/critical findings and no production findings.
-The remaining chain is Browserify's crypto-browserify / browserify-sign / create-ecdh / elliptic.
-These modules are not in this application's Browserify output (which imports D3 and local sources).
+The first three passes retained 4 low-severity development packages, with no moderate/high/critical findings and no production findings.
+Their chain was Browserify's crypto-browserify / browserify-sign / create-ecdh / elliptic.
+The bundler replacement removes that chain; its audit reports 0 vulnerabilities including development dependencies.
 Counts are a 2026-10-10 snapshot, not a permanent guarantee.
 Do not use `npm audit fix --force`: even the compatible automated fix tried resolving an older crypto-browserify with new critical findings during this pass; newer compatible versions were restored and re-audited.
 
-D3 has breaking API changes after v3. MDL is in limited support. Further compiler upgrades and any bundler replacement need a separate migration and browser regression checks.
+D3 has breaking API changes after v3. MDL is in limited support. Further compiler upgrades and changes to the ES5 output target need a separate migration and browser regression checks.
 Keep fixed-seed reproducibility and seedrandom's browser global API in regression checks during any bundler migration.

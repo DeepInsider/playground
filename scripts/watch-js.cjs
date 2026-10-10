@@ -16,8 +16,7 @@ function rebuild() {
     return;
   }
   child = spawn(process.execPath, [
-    require.resolve('browserify/bin/cmd.js'), 'src/playground.ts',
-    '-p', 'tsify', '--debug', '-o', 'docs/bundle.js'
+    path.join(root, 'scripts/build-js.cjs'), '--debug'
   ], { cwd: root, stdio: 'inherit' });
   child.on('error', error => console.error(error));
   child.on('close', code => {
