@@ -68,3 +68,20 @@ Do not use `npm audit fix --force`: even the compatible automated fix tried reso
 
 D3 has breaking API changes after v3. MDL is in limited support. Further compiler upgrades and changes to the ES5 output target need a separate migration and browser regression checks.
 Keep fixed-seed reproducibility and seedrandom's browser global API in regression checks during any bundler migration.
+
+## Security patch maintenance (2026-11-10)
+
+Dependabot alert #1 ([GHSA-mrwp-f3q8-3g9p](https://github.com/advisories/GHSA-mrwp-f3q8-3g9p))
+affected the development-only `http-server -> http-proxy -> follow-redirects` chain.
+The lockfile updates follow-redirects from 1.16.1 to 1.16.3 (the advisory fix starts at 1.16.2).
+No direct follow-redirects dependency or override is necessary.
+
+The same audit found moderate development findings in rimraf/glob/minimatch and qs.
+Rimraf is patched from 6.1.3 to 6.1.4, with compatible transitive updates; qs updates to 6.17.1.
+No application or generated-site content changes are required.
+
+Validation uses Node 24.21.0 and npm 11.19.0: clean install with `--ignore-scripts`,
+TypeScript typecheck, full build, and development/production audits. A loopback-only redirect
+check covers same-realm and `node:vm` cross-realm sensitive-header arrays, using both object
+and array header representations. All four cases remove the dummy X-API-Key while retaining
+X-Harmless. Audit counts are a point-in-time result, not a permanent guarantee.

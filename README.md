@@ -19,6 +19,9 @@ To run the visualization locally, run:
 For a fast edit-refresh cycle when developing run `npm run serve-watch`.
 This will start an http server and automatically re-compile the TypeScript,
 HTML and CSS files whenever they change.
+The 2026-11-10 security maintenance updates development-only redirect and file-tool dependencies.
+See the security patch section in [dependency maintenance](maintenance.md).
+
 The watchers use Node's built-in file watching. See [dependency maintenance](maintenance.md) for update boundaries and validation.
 TypeScript is pinned to 5.9.3 and emits checked ES5/CommonJS into an ignored temporary `.build/` directory. Esbuild bundles that output; browser code still targets ES5.
 The bundle uses the D3 v3 global already loaded by `lib.js`. Keep `lib.js` before `bundle.js` in the HTML.
